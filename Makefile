@@ -6,7 +6,7 @@ CXX=g++
 LD_FLAGS=-lqfio -lqarg
 CXX_FLAGS=-std=c++17 -I./include
 
-NAME=qcipher.caesar
+NAME=qcaesar
 BINARY=out/${NAME}
 
 ifdef DEBUG
