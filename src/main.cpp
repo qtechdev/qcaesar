@@ -24,7 +24,7 @@ int main(int argc, const char *argv[]) {
   args.add<bool>('u', "unshift");
   args.add<std::string>('f', "file path");
   args.add<std::string>('t', "text");
-  args.add<std::string>('c', "cipher type");
+  args.add<bool>('r', "use running key");
 
   try {
     args.parse(argc, argv);
@@ -60,14 +60,13 @@ int main(int argc, const char *argv[]) {
   }
 
   std::string cipher_text;
-  auto cipher_type = args.get<std::string>('c');
   const bool reverse = *args.get<bool>('u');
+  const bool use_running_key = *args.get<bool>('r');
 
-  if (cipher_type && *cipher_type == "running") {
+  if (use_running_key) {
     const std::string key = *args.get<std::string>('s');
     cipher_text = runningkey(plain_text, key, reverse);
-  } else { /* Standad Caesar Shift*/
-    // get shift value
+  } else { /* Standard Caesar Shift*/
     int count = 0;
     const int shift = *args.get<int>('s');
     count = shift;
@@ -76,7 +75,6 @@ int main(int argc, const char *argv[]) {
       count *= -1;
     }
 
-    // encode
     cipher_text = caesar(plain_text, count);
   }
 
@@ -93,14 +91,14 @@ void show_usage(const std::string name) {
     (
       "usage:\n"
       "  %1$s -h\n"
-      "  %1$s -c caesar -f <file path> -s <shift value> [-u]\n"
-      "  %1$s -c caesar -t <plain text> -s <shift value> [-u]\n"
-      "  %1$s -c running -f <file path> -s <shift key> [-u]\n"
-      "  %1$s -c running -t <plain text> -s <shift key> [-u]\n"
+      "  %1$s -f <file path> -s <shift value> [-u]\n"
+      "  %1$s -t <plain text> -s <shift value> [-u]\n"
+      "  %1$s -r -f <file path> -s <shift key> [-u]\n"
+      "  %1$s -r -t <plain text> -s <shift key> [-u]\n"
       "\n"
       "ciphers:\n"
-      "  caesar   : standard caesar shift\n"
-      "  running  : caesar shift with running key\n"
+      "  caesar   : standard caesar shift (default)\n"
+      "  running  : caesar shift with running key (-r)\n"
     ),
     name.c_str()
   );
