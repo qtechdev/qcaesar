@@ -1,4 +1,4 @@
-# qchipher.caesar
+# qcaesar
 A simple caesar shift.
 
 ## usage
