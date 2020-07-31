@@ -2,6 +2,16 @@
 
 #include "standard.hpp"
 
+int txmod(int n, const int c, const int min, const int max) {
+  int dist = (max - min) + 1;
+
+  n += c;
+  while (n < min) { n += dist; }
+  while (n > max) { n -= dist; }
+
+  return n;
+}
+
 char caesar(const int c, int count) {
   bool x;
   return caesar(c, count, x);
@@ -12,21 +22,9 @@ char caesar(const int c, int count, bool &changed) {
   changed = true;
 
   if (c >= 'A' && c <= 'Z') {
-    new_c = c + count;
-
-    if (new_c < 'A') {
-      new_c += 26;
-    } else if (new_c > 'Z') {
-      new_c -= 26;
-    }
+    new_c = txmod(c, count, 'A', 'Z');
   } else  if (c >= 'a' && c <= 'z') {
-    new_c = c + count;
-
-    if (new_c < 'a') {
-      new_c += 26;
-    } else if (new_c > 'z') {
-      new_c -= 26;
-    }
+    new_c = txmod(c, count, 'a', 'z');
   } else {
     new_c = c;
     changed = false;
