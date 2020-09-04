@@ -9,7 +9,6 @@
 #include "standard.hpp"
 #include "running.hpp"
 
-void show_usage(const std::string name);
 char caesar(const int c, int count);
 char caesar(const int c, int count, bool &changed);
 std::string caesar(const std::string &plain, int count);
@@ -30,13 +29,12 @@ int main(int argc, const char *argv[]) {
     args.parse(argc, argv);
   } catch (std::invalid_argument &e) {
     std::cerr << e.what() << "\n";
-    show_usage(argv[0]);
     return 1;
   }
 
   const bool help = *args.get<bool>('h');
   if (help) {
-    show_usage(argv[0]);
+    std::cout << args.help();
     return 0;
   }
 
@@ -45,7 +43,7 @@ int main(int argc, const char *argv[]) {
   const std::optional<std::string> file = args.get<std::string>('f');
   const std::optional<std::string> text = args.get<std::string>('t');
   if (file) {
-    const auto file_text = fio::read(*file);
+    const auto file_text = qfio::read(*file);
     if (!file_text) {
       std::cerr << "could not read file\n";
       return 3;
@@ -55,7 +53,7 @@ int main(int argc, const char *argv[]) {
   } else if (text) {
     plain_text = *text;
   } else {
-    show_usage(argv[0]);
+    std::cerr << "missing argument, -f or -t\n";
     return 2;
   }
 
@@ -82,26 +80,4 @@ int main(int argc, const char *argv[]) {
   std::cout << "Cipher Text : " << cipher_text << "\n";
 
   return 0;
-}
-
-void show_usage(const std::string name) {
-  char buf[512];
-  int n = std::snprintf(
-    buf, 512,
-    (
-      "usage:\n"
-      "  %1$s -h\n"
-      "  %1$s -f <file path> -s <shift value> [-u]\n"
-      "  %1$s -t <plain text> -s <shift value> [-u]\n"
-      "  %1$s -r -f <file path> -s <shift key> [-u]\n"
-      "  %1$s -r -t <plain text> -s <shift key> [-u]\n"
-      "\n"
-      "ciphers:\n"
-      "  caesar   : standard caesar shift (default)\n"
-      "  running  : caesar shift with running key (-r)\n"
-    ),
-    name.c_str()
-  );
-  std::snprintf(buf+n, 512-n, "\n");
-  std::cerr << buf;
 }
