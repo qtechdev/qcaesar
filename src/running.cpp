@@ -8,7 +8,7 @@ std::string runningkey(
   const std::string &plain, const std::string &key, const bool reverse
 ) {
   std::string cipher;
-  int index = 0;
+  std::size_t index = 0;
 
   for (char c : plain) {
     if (index >= key.size()) {

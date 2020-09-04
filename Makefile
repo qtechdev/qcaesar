@@ -1,10 +1,10 @@
-SOURCES=$(wildcard src/*.cpp) $(wildcard src/*/*.cpp)
+SOURCES=$(wildcard src/*.cpp)
 OBJECTS=$(patsubst src/%,build/%,${SOURCES:.cpp=.o})
 DIRS=$(sort $(dir ${OBJECTS}))
 
 CXX=g++
 LD_FLAGS=-lqfio -lqarg
-CXX_FLAGS=-std=c++17 -I./include
+CXX_FLAGS=-std=c++17 -Wall -Wextra -pedantic
 
 NAME=qcaesar
 BINARY=out/${NAME}
